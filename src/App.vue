@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import VirtualList from "@/src/components/VirtualList.vue";
+</script>
 
-<template></template>
+<template>
+  <VirtualList />
+</template>
 
 <style></style>
