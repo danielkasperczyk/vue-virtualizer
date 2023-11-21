@@ -8,4 +8,29 @@ describe("VirtualList", () => {
 
     expect(!!component).toBe(true);
   });
+
+  describe("Different tags render", () => {
+    test("Should have render default parent tag 'div' with class of 'virtual-list'", () => {
+      const items = ["123", "456"];
+      const component = shallowMount(VirtualList, {
+        props: {
+          items,
+        },
+      });
+
+      expect(component.find("div").classes()).toContain("virtual-list");
+    });
+
+    test("Should have render default parent tag 'ul' with class of 'virtual-list'", () => {
+      const items = ["123", "456"];
+      const component = shallowMount(VirtualList, {
+        props: {
+          items,
+          tag: "ul",
+        },
+      });
+
+      expect(component.find("ul").classes()).toContain("virtual-list");
+    });
+  });
 });
