@@ -1,22 +1,22 @@
 <template>
   <component :is="tag" class="virtual-list">
     <template v-for="item in items" :key="item">
-      <slot name="item" v-bind="{ item }">
-        <div class="virtual-list__item">{{ item }}</div>
+      <slot name="item" v-bind="itemBinding(item)">
+        <div v-bind="itemBinding(item).props">{{ item }}</div>
       </slot>
     </template>
   </component>
 </template>
 <script lang="ts">
 import { PropType, defineComponent } from "vue";
+import type { VirtualListItem } from "@/src/composables/useVirtualListItem";
+import {
+  virtualListItemProps,
+  useVirtualListItem,
+} from "@/src/composables/useVirtualListItem";
 
 type VirtualListTags = "div" | "ul";
 const supportedTags: VirtualListTags[] = ["div", "ul"];
-
-type VirtualListItemTags = "div";
-const supportedItemTags: VirtualListItemTags[] = ["div"];
-
-type VirtualListItem = Record<string, any> & { id: string | number };
 
 export default defineComponent({
   name: "VirtualList",
@@ -30,16 +30,21 @@ export default defineComponent({
       default: "div",
       validator: (tag: VirtualListTags) => supportedTags.includes(tag),
     },
-    itemTag: {
-      type: String as PropType<VirtualListItemTags>,
-      default: "div",
-      validator: (tag: VirtualListItemTags) => supportedItemTags.includes(tag),
-    },
+    ...virtualListItemProps,
+  },
+
+  setup(props) {
+    const { itemBinding, boundedItemHeight } = useVirtualListItem(props);
+
+    return { boundedItemHeight, itemBinding };
   },
 });
 </script>
 <style scoped>
 .virtual-list {
   overflow-y: scroll;
+}
+.virtual-list__item {
+  height: v-bind(boundedItemHeight);
 }
 </style>

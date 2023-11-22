@@ -1,6 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import VirtualList from "../VirtualList.vue";
+import { nextTick } from "vue";
 
 type ComponentProp = Partial<InstanceType<typeof VirtualList>["$props"]>;
 
