@@ -1,16 +1,30 @@
 import { describe, test, expect } from "vitest";
-import { useVirtualList } from "@/src/composables/useVirtualList";
+import {
+  UseVirtualListProps,
+  useVirtualList,
+} from "@/src/composables/useVirtualList";
+import { computed } from "vue";
+
+const defaultProps = (): UseVirtualListProps => ({
+  height: 200,
+  target: null,
+  itemHeight: 50,
+  items: [],
+  currentVerticalPosition: computed(() => 0),
+});
 
 describe("useVirtualList", () => {
   test("Virtual list height", () => {
-    const { virtualListHeight } = useVirtualList({ height: "auto" });
+    const { boundedVirtualListHeight } = useVirtualList({
+      ...defaultProps(),
+      height: "auto",
+    });
 
-    expect(virtualListHeight.value).toBe("auto");
+    expect(boundedVirtualListHeight.value).toBe("auto");
   });
 
   test("Virtual list height in pixels", () => {
-    const { virtualListHeight } = useVirtualList({ height: 200 });
-
-    expect(virtualListHeight.value).toBe("200px");
+    const { boundedVirtualListHeight } = useVirtualList(defaultProps());
+    expect(boundedVirtualListHeight.value).toBe("200px");
   });
 });

@@ -4,19 +4,27 @@
     ref="virtualListRef"
     class="virtual-list"
     :style="{
-      '--vv-virtual-list-height': virtualListHeight,
+      '--vv-virtual-list-height': boundedVirtualListHeight,
     }"
   >
-    <template v-for="item in items" :key="item">
-      <slot name="item" v-bind="itemBinding(item)">
-        <div v-bind="itemBinding(item).props">{{ item }}</div>
-      </slot>
-    </template>
+    <div
+      class="virtual-list__outer-expander"
+      :style="{
+        '--vv-virtual-list-expander-height': `${expanderHeight}px`,
+      }"
+    >
+      <div class="virtual-list__viewport" :style="transformToIndex">
+        <template v-for="item in visibleItems" :key="item">
+          <slot name="item" v-bind="itemBinding(item)">
+            <div v-bind="itemBinding(item).props">{{ item }}</div>
+          </slot>
+        </template>
+      </div>
+    </div>
   </component>
-  {{ y }}
 </template>
 <script lang="ts">
-import { PropType, defineComponent, ref } from "vue";
+import { PropType, computed, defineComponent, ref } from "vue";
 import type { VirtualListItem } from "@/src/composables/useVirtualListItem";
 import {
   virtualListItemProps,
@@ -54,15 +62,33 @@ export default defineComponent({
   setup(props) {
     const virtualListRef = ref<HTMLElement>();
 
-    const { itemBinding, boundedItemHeight } = useVirtualListItem(props);
     const { y } = useScroll(virtualListRef);
-    const { virtualListHeight } = useVirtualList(props);
+    const { itemBinding, boundedItemHeight } = useVirtualListItem(props);
+    const { boundedVirtualListHeight, height, visibleItems, startIndex } =
+      useVirtualList({
+        ...props,
+        target: virtualListRef,
+        currentVerticalPosition: y,
+      });
+
+    const expanderHeight = computed(
+      () => props.items.length * props.itemHeight
+    );
+
+    const transformToIndex = computed(() => ({
+      position: "absolute" as const,
+      top: `${props.itemHeight * startIndex.value}px`,
+    }));
 
     return {
       virtualListRef,
       boundedItemHeight,
-      virtualListHeight,
+      boundedVirtualListHeight,
+      height,
       y,
+      expanderHeight,
+      visibleItems,
+      transformToIndex,
       itemBinding,
     };
   },
@@ -72,6 +98,16 @@ export default defineComponent({
 .virtual-list {
   overflow-y: auto;
   height: var(--vv-virtual-list-height);
+  position: relative;
+}
+.virtual-list__outer-expander {
+  position: relative;
+  height: var(--vv-virtual-list-expander-height);
+}
+.virtual-list__viewport {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 .virtual-list__item {
   height: v-bind(boundedItemHeight);
