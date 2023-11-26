@@ -4,6 +4,7 @@ import { VirtualListItem } from "./useVirtualListItem";
 export type UseVirtualListProps = {
   height: number | string;
   itemHeight: number;
+  disabled: boolean;
   items: VirtualListItem[];
   target: MaybeRefOrGetter<HTMLElement | undefined | null>;
   currentVerticalPosition: ComputedRef<number>;
@@ -28,12 +29,33 @@ export const useVirtualList = (props: UseVirtualListProps) => {
     return Math.ceil(height.value / props.itemHeight);
   });
 
+  const transformToIndex = computed(() => {
+    /** TODO
+     *  Issue: without if statement it will return only first visible items if
+     *         if disabled prop was passed
+     * Should be check how it will be working if scrollTo method will be used
+     * and exposed
+     */
+    if (props.disabled) return {};
+    return {
+      position: "absolute" as const,
+      top: `${props.itemHeight * startIndex.value}px`,
+    };
+  });
+
   const visibleItems = computed(() => {
+    if (props.disabled) return props.items;
     return props.items.slice(
       startIndex.value,
       startIndex.value + maxItemsVisibleAtOnce.value
     );
   });
 
-  return { boundedVirtualListHeight, height, visibleItems, startIndex };
+  return {
+    boundedVirtualListHeight,
+    height,
+    visibleItems,
+    startIndex,
+    transformToIndex,
+  };
 };

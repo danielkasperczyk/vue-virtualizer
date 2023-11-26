@@ -48,13 +48,13 @@ export default defineComponent({
       default: "div",
       validator: (tag: VirtualListTags) => supportedTags.includes(tag),
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     height: {
       type: [Number, String],
       default: "100%",
-      validator: (height: string | number) => {
-        if (typeof height === "string") return ["auto"].includes(height);
-        return height >= 0;
-      },
     },
     ...virtualListItemProps,
   },
@@ -64,7 +64,7 @@ export default defineComponent({
 
     const { y } = useScroll(virtualListRef);
     const { itemBinding, boundedItemHeight } = useVirtualListItem(props);
-    const { boundedVirtualListHeight, height, visibleItems, startIndex } =
+    const { boundedVirtualListHeight, height, visibleItems, transformToIndex } =
       useVirtualList({
         ...props,
         target: virtualListRef,
@@ -74,11 +74,6 @@ export default defineComponent({
     const expanderHeight = computed(
       () => props.items.length * props.itemHeight
     );
-
-    const transformToIndex = computed(() => ({
-      position: "absolute" as const,
-      top: `${props.itemHeight * startIndex.value}px`,
-    }));
 
     return {
       virtualListRef,
