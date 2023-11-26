@@ -106,8 +106,8 @@ export default defineComponent({
 }
 .virtual-list__viewport {
   position: relative;
+  width: 100%;
   top: 0;
-  left: 0;
 }
 :global(.virtual-list__item) {
   height: v-bind(boundedItemHeight);

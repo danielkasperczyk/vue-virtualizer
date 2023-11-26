@@ -18,8 +18,8 @@ const items = [
 <template>
   <div class="test">
     <VirtualList :items="items">
-      <template #item="{ props }">
-        <div v-bind="props">item</div>
+      <template #item="{ props, item }">
+        <div v-bind="props">{{ item.value }}</div>
       </template>
     </VirtualList>
   </div>
