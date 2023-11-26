@@ -14,9 +14,9 @@
       }"
     >
       <div class="virtual-list__viewport" :style="transformToIndex">
-        <template v-for="item in visibleItems" :key="item">
+        <template v-for="item in visibleItems" :key="item[itemKey]">
           <slot name="item" v-bind="itemBinding(item)">
-            <div v-bind="itemBinding(item).props">{{ item }}</div>
+            <div v-bind="itemBinding(item).props">{{ item[itemText] }}</div>
           </slot>
         </template>
       </div>
@@ -50,7 +50,7 @@ export default defineComponent({
     },
     height: {
       type: [Number, String],
-      default: "auto",
+      default: "100%",
       validator: (height: string | number) => {
         if (typeof height === "string") return ["auto"].includes(height);
         return height >= 0;
@@ -109,7 +109,7 @@ export default defineComponent({
   top: 0;
   left: 0;
 }
-.virtual-list__item {
+:global(.virtual-list__item) {
   height: v-bind(boundedItemHeight);
 }
 </style>

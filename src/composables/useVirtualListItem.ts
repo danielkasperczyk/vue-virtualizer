@@ -16,6 +16,14 @@ export const virtualListItemProps = {
     default: "div",
     validator: (tag: VirtualListItemTags) => supportedItemTags.includes(tag),
   },
+  itemKey: {
+    type: String,
+    default: "id",
+  },
+  itemText: {
+    type: String,
+    default: "value",
+  },
   itemHeight: {
     type: Number,
     default: 50,

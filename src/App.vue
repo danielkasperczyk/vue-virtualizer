@@ -2,21 +2,31 @@
 import VirtualList from "@/src/components/VirtualList.vue";
 
 const items = [
-  { id: "test" },
-  { id: "test2" },
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: "test3" },
-  { id: "test4" },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
+  { id: "test", value: "Virtual list item 1" },
+  { id: "test2", value: "Virtual list item 2" },
+  { id: 1, value: "Virtual list item 3" },
+  { id: 2, value: "Virtual list item 4" },
+  { id: 3, value: "Virtual list item 5" },
+  { id: "test3", value: "Virtual list item 6" },
+  { id: "test4", value: "Virtual list item 7" },
+  { id: 4, value: "Virtual list item 8" },
+  { id: 5, value: "Virtual list item 9" },
+  { id: 6, value: "Virtual list item 10" },
 ];
 </script>
 
 <template>
-  <VirtualList :items="items" :height="150" />
+  <div class="test">
+    <VirtualList :items="items">
+      <template #item="{ props }">
+        <div v-bind="props">item</div>
+      </template>
+    </VirtualList>
+  </div>
 </template>
 
-<style></style>
+<style scoped>
+.test {
+  height: 150px;
+}
+</style>

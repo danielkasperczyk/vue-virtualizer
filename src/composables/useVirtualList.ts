@@ -31,7 +31,7 @@ export const useVirtualList = (props: UseVirtualListProps) => {
   const visibleItems = computed(() => {
     return props.items.slice(
       startIndex.value,
-      startIndex.value + maxItemsVisibleAtOnce.value + 2
+      startIndex.value + maxItemsVisibleAtOnce.value
     );
   });
 
